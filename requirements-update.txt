@@ -1,0 +1,7 @@
+asgiref==3.7.2
+configparser==6.0.0
+Django==4.2.2
+mysqlclient @ file:///home/conda/feedstock_root/build_artifacts/mysqlclient_1666954544607/work
+sqlparse==0.4.4
+typing_extensions==4.7.1
+tzdata==2023.3

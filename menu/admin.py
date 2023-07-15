@@ -1,6 +1,19 @@
 from django.contrib import admin
 from menu.models import Menu
 from menu.models import SubMenu
+from .models import Case, CaseFile
+
+class CaseFileAdmin(admin.StackedInline):
+    model = CaseFile
+
+@admin.register(Case)
+class CaseAdmin(admin.ModelAdmin):
+    list_display = 'name',
+    inlines = [CaseFileAdmin]
+
+@admin.register(CaseFile)
+class CaseFileAdmin(admin.ModelAdmin):
+    pass
 
 # Register your models here.
 @admin.register(Menu)

@@ -27,3 +27,18 @@ class SubMenu(models.Model):
 
     def __str__(self):
         return self.text
+
+def case_upload_location(instance, filename):
+    case_name = instance.name_id
+    file_name = filename.lower().replace(" ", "-")
+    return "licitacoes/{}/{}".format(case_name, file_name)
+
+class Case(models.Model):
+    # datos del caso
+    name = models.CharField('Nombre', max_length=250)
+    observations = models.TextField('Observaciones', null = True, blank = True)
+    number_folder = models.CharField('Numero de Carpeta', max_length=250)
+
+class CaseFile(models.Model):
+    name = models.ForeignKey(Case, on_delete=models.CASCADE) # When a Case is deleted, upload models are also deleted
+    file = models.FileField(upload_to=case_upload_location, null = True, blank = True)
