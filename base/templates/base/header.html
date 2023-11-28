@@ -15,27 +15,30 @@
     <!-- https://fontawesome.com/v5/icons/ -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
     
+    <link rel="icon" href="/media/sistema/icone_vazio.png" type="image/x-icon">
+
     <title>
-        {%block 'titulo'%}{%endblock%} - CRM
+        {%block 'titulo'%}{%endblock%}
     </title>
 
+    {%block 'body_style' %}
+    {%endblock%}
+
 </head>
-<body class="bg-secondary">
+<body class="bg-dark">
         {% comment %} Optional Nav Bar {% endcomment %}
         {%block 'navbar'%}
                         
         {%endblock%}
 
         <!-- MAIN -->
-        <div class="col" style="">            
-            <div class="container-fluid mt-4">
+        <div class="col">            
                 <div style="padding: 20px;">
                     
                     {%block 'conteudo'%}
                     
                     {%endblock%}
                 </div>
-            </div>            
         </div>
         <!-- Main Col END -->
     

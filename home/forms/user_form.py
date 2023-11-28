@@ -17,31 +17,37 @@ class RegisterForm(UserCreationForm):
     first_name = forms.CharField(
         required=True,
         min_length=3,
+        label="Primeiro Nome",
         widget = forms.TextInput(attrs={"class": "form-control"})
     )
 
     last_name = forms.CharField(
         required=True,
         min_length=3,
+        label="Sobrenome",
         widget = forms.TextInput(attrs={"class": "form-control"})
     )
 
     email = forms.EmailField(
+        label="Email",
         widget = forms.TextInput(attrs={"class": "form-control"})
     )
 
     username = forms.CharField(
+        label="Nome de Usuário",
         widget = forms.TextInput(attrs={"class": "form-control"})
     )
 
-    password1 = forms.CharField(label="Password",
+    password1 = forms.CharField(
         strip=False,
+        label="Senha",
         widget=forms.PasswordInput(attrs={"autocomplete": "new-password","class": "form-control"}),
         help_text=password_validation.password_validators_help_text_html(),
         required=False,
     )
 
     password2 = forms.CharField(
+        label="Confirme sua Senha",
         widget = forms.PasswordInput(attrs={"class": "form-control"})
     )
     class Meta:

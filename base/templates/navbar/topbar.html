@@ -1,0 +1,29 @@
+
+    <!-- Bootstrap NavBar -->
+    <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #F2B63D;">
+        <div class="col-12 d-flex align-items-center justify-content-between">
+
+            <!-- LOGOTIPO -->
+            <a class="navbar-brand" href="{% url 'home:index' %}">
+                <img src="/media/sistema/logo.png" width="100" height="30" class="d-inline-block align-top" alt="">
+            </a>            
+            
+            <!-- Botões Canto Superior Direito -->
+            <div>
+                {% if user.is_authenticated %}
+                        <a class=" btn btn-warning btn-sm" href="{% url 'home:logout' %}">Sair<i class="fas fa-sign-out-alt ml-2"></i></a>
+                {% endif %}
+
+                {% if user.is_superuser %}
+                    <!-- Abrir Admin New tab-->
+                    <a class=" btn btn-primary btn-sm" href="{% url 'admin:index' %}" target="_blank"><i class="fas fa-wrench mr-2"></i>Admin</a>
+                {% endif %}
+    
+            </div>
+               
+        </div>
+    </nav>
+    <!-- NavBar END -->
+        
+<!-- sidebar-container END -->
+        

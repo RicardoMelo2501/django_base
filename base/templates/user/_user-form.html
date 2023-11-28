@@ -5,9 +5,8 @@ method="POST"
 {% csrf_token %}      
 
 <div class="form-content">
-
   {% for field in form %}
-    <div class="form-group">
+    <div class="form-group mt-2">
       <label for="{{ field.id_for_label }}">{{ field.label }}</label>
       {{ field }}
       {{ field.errors }}

@@ -1,13 +1,11 @@
 
     <!-- Bootstrap NavBar -->
-    <nav class="navbar navbar-expand-md navbar-dark bg-danger">
+    <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #F2B63D;">
         <div class="col-12 d-flex align-items-center justify-content-between">
 
             <!-- LOGOTIPO -->
             <a class="navbar-brand" href="{% url 'home:index' %}">
-                <img src="https://v4-alpha.getbootstrap.com/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt="">
-                {% comment %} <img src="https://scontent.frec22-1.fna.fbcdn.net/v/t39.30808-6/306142906_584760366552492_8407327296725868215_n.jpg?_nc_cat=102&cb=99be929b-3346023f&ccb=1-7&_nc_sid=09cbfe&_nc_eui2=AeHsCCHcyYmuMEHH7oj0bpNFPPHB6-77bBA88cHr7vtsEIFnd3wOKh8wEvcxeKM7Qb_rCRi9wUzGqCxCQOpwlRPZ&_nc_ohc=HLDQmeSRBmUAX_UokRv&_nc_ht=scontent.frec22-1.fna&oh=00_AfB0tZgZLzInf3HEAC8m_I72hSm_MUQtyDGDjLBgvngl6A&oe=64B9D89B" width="30" height="30" class="d-inline-block align-top" alt=""> {% endcomment %}
-                <span class="menu-collapsed">CRM</span>
+                <img src="/media/sistema/logo.png" width="100" height="30" class="d-inline-block align-top" alt="">
             </a>            
             
             <!-- Botões Canto Superior Direito -->
@@ -51,7 +49,7 @@
                     <div id='submenu{{ menu.id }}' class="collapse sidebar-submenu">
                     {% for submenu in sub_menus %}
                         {% if submenu.parent_menu_id == menu.id %}
-                        <a href="{% url submenu.url_or_path %}" class="list-group-item list-group-item-action bg-danger text-white">
+                        <a href="{% url submenu.url_or_path %}" class="list-group-item list-group-item-action bg-secondary text-white">
                                 <i class="{{ submenu.font_awesome_icon }} mr-1" aria-hidden="true"></i>
                                 <span class="menu-collapsed">{{ submenu.text }}</span>
                             </a>
@@ -59,10 +57,8 @@
                     {% endfor %}
                     </div>
                 {% endfor %}                
-
-                <!-- Logo -->
-                <li class="list-group-item logo-separator d-flex justify-content-center">
-                    <img src='https://v4-alpha.getbootstrap.com/assets/brand/bootstrap-solid.svg' width="30" height="30" />    
-                </li>   
             </ul><!-- List Group END-->
-        </div><!-- sidebar-container END -->
+        </div>
+        
+        <!-- sidebar-container END -->
+        

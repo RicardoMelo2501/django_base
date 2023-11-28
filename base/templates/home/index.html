@@ -1,25 +1,52 @@
 {%extends 'base/header.html'%}
 
-
 {%block 'titulo'%}
-Home
+Portal Funcionários
 {%endblock%}
 
 {% block 'navbar' %}
-    {%include 'navbar/navbar.html' %}    
+    {%include 'navbar/topbar.html' %}    
 {% endblock%}
 
 {%block 'conteudo'%}
 
+<style>
+    .download-button:hover {
+        background-color: gray;
+        color: white !important;
+    }
+</style>
+
     <div class="card">
         <div class="card-body">
-            <div class="p-4">
-                <h1>Seja bem Vindo !</h1>
-            </div>
-            <div>
-                <button type="submit" class="btn btn-success">Criar Menu</button>
-            </div>
-        </div>        
+            <div class="p-4 row">
+                <!-- Contracheques -->
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                    <div class="card text-center shadow-lg download-button h-100">
+                        <a href="{% url "home:contracheque" %}" class="text-decoration-none">
+                            <div class="px-4 pt-4 text-dark" style="font-size: 8vw;">
+                                <i class="fas fa-money-check-alt"></i>                             
+                            </div>
+                            <div class="card-body ">
+                                <p class="card-text text-dark">Consultar Contracheques</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <!-- Add PDF -->
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                    <div class="card text-center shadow-lg download-button h-100">
+                        <a href="{% url "home:adicionar_pdf" %}" class="text-decoration-none">
+                            <div class="px-4 pt-4 text-dark" style="font-size: 8vw;">
+                                <i class="fas fa-receipt"></i>                          
+                            </div>
+                            <div class="card-body ">
+                                <p class="card-text text-dark">Adicionar PDF</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>        
     </div>
 {%endblock%}
 
