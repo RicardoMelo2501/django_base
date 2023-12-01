@@ -11,11 +11,10 @@ urlpatterns = [
     path('register/', user_view.register, name='register'),
     path('list/', user_view.index, name='list'),
     path('edit/<int:pk>/', user_view.update, name='edit'),
-
         
     path('contracheque/', home_view.home, name='contracheque'),
 
-    path('inserirpdf/', home_view.home, name='adicionar_pdf'),
+    path('inserirpdf/', home_view.adicionar_contracheque, name='adicionar_pdf'),
 
     path('default/', home_view.default_page, name='defalt_page'),
 ]

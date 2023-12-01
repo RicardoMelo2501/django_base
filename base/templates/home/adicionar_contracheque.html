@@ -1,0 +1,121 @@
+{%extends 'base/header.html'%}
+
+{%block 'titulo'%}
+Portal Funcionários
+{%endblock%}
+
+{% block 'navbar' %}
+    {%include 'navbar/topbar.html' %}    
+{% endblock%}
+
+{%block 'conteudo'%}
+
+<style>
+    .download-button:hover {
+        background-color: gray;
+        color: white !important;
+    }
+</style>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="p-4 row">
+                <!-- Contracheques -->
+                <div class="col-xl-12 col-lg-4 col-md-6 col-sm-12">
+
+                    {% if recibo %}
+                        {{recibo.nome}}
+                    {% endif %}
+
+                    <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}  
+
+                        <label>Nome do Recibo</label>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" name="nome" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+
+                        <label>Data de inserção</label>
+                        <div class="input-group mb-3">
+                            <input type="date" class="form-control" name="data" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+
+                        <input id="inp-theme-fa5-2" name="contracheque" type="file">
+                        <!-- <div class="file-loading">
+                        </div> -->
+
+                        <div class="mt-4 d-flex justify-content-between">
+                            <a href="{% url "home:index" %}" class="btn btn-primary"><i class="fas fa-arrow-left mr-2"></i>Voltar</a>
+                            <button class="btn btn-success"><i class="fas fa-save mr-2"></i>Salvar</button>
+                        </div>
+                    </form>
+
+                    <script>
+                    // $("#inp-theme-fa5-2").fileinput({
+                    //     // language: "pt-BR",
+                    //     dropZoneEnabled: false,
+                    //     theme: "fa5",
+                    //     minFileCount: 1,
+                    //     maxFileCount: 1,
+                    //     maxFileSize: 10000,
+                    //     removeFromPreviewOnError: true,
+                    //     overwriteInitial: false,
+                    //     previewFileIcon: '<i class="fas fa-file"></i>',
+                    //     initialPreviewAsData: true, // defaults markup  
+                    //     initialPreviewConfig: [
+                    //         {caption: "Image 11.jpg", description: "<h5>File One</h5> This is an image file.", size: 762980, url: "/site/file-delete", downloadUrl: 'https://picsum.photos/id/1071/1920/1080', key: 1071},
+                    //         {previewAsData: false, description: "<h5>File Two</h5> This is also an image file.", size: 823782, caption: "Image 13.jpg", url: "/site/file-delete", downloadUrl: 'https://picsum.photos/id/1075/1920/1080', key: 1075}, 
+                    //         {caption: "Lorem Ipsum.txt", type: "text", description: "<h5>File Three</h5> This is a text file.", size: 1430, url: "/site/file-delete", key: 12}, 
+                    //         {type: "pdf", description: "<h5>File Four</h5> This is a PDF document.", size: 8000, caption: "PDF Sample.pdf", url: "/site/file-delete", key: 14}, 
+                    //         {type: "video", description: "<h5>File Five</h5> This is a Video file.", size: 375000, filetype: "video/mp4", caption: "Krajee Sample.mp4", url: "/site/file-delete", key: 15} 
+                    //     ],
+                    //     preferIconicPreview: true, // this will force thumbnails to display icons for following file extensions
+                    //          previewFileIconSettings: { // configure your icon file extensions
+                    //         'doc': '<i class="fas fa-file-word text-primary"></i>',
+                    //         'xls': '<i class="fas fa-file-excel text-success"></i>',
+                    //         'ppt': '<i class="fas fa-file-powerpoint text-danger"></i>',
+                    //         'pdf': '<i class="fas fa-file-pdf text-danger"></i>',
+                    //         'zip': '<i class="fas fa-file-archive text-muted"></i>',
+                    //         'htm': '<i class="fas fa-file-code text-info"></i>',
+                    //         'txt': '<i class="fas fa-file-alt text-info"></i>',
+                    //         'mov': '<i class="fas fa-file-video text-warning"></i>',
+                    //         'mp3': '<i class="fas fa-file-audio text-warning"></i>',
+                    //         // note for these file types below no extension determination logic 
+                    //         // has been configured (the keys itself will be used as extensions)
+                    //         'jpg': '<i class="fas fa-file-image text-danger"></i>', 
+                    //         'gif': '<i class="fas fa-file-image text-muted"></i>', 
+                    //         'png': '<i class="fas fa-file-image text-primary"></i>'    
+                    //     },
+                    //     previewFileExtSettings: { // configure the logic for determining icon file extensions
+                    //         'doc': function(ext) {
+                    //             return ext.match(/(doc|docx)$/i);
+                    //         },
+                    //         'xls': function(ext) {
+                    //             return ext.match(/(xls|xlsx)$/i);
+                    //         },
+                    //         'ppt': function(ext) {
+                    //             return ext.match(/(ppt|pptx)$/i);
+                    //         },
+                    //         'zip': function(ext) {
+                    //             return ext.match(/(zip|rar|tar|gzip|gz|7z)$/i);
+                    //         },
+                    //         'htm': function(ext) {
+                    //             return ext.match(/(htm|html)$/i);
+                    //         },
+                    //         'txt': function(ext) {
+                    //             return ext.match(/(txt|ini|csv|java|php|js|css)$/i);
+                    //         },
+                    //         'mov': function(ext) {
+                    //             return ext.match(/(avi|mpg|mkv|mov|mp4|3gp|webm|wmv)$/i);
+                    //         },
+                    //         'mp3': function(ext) {
+                    //             return ext.match(/(mp3|wav)$/i);
+                    //         }
+                    //     }
+                    // });
+                    </script>
+                </div>                
+            </div>        
+    </div>
+{%endblock%}
+
