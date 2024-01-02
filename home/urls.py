@@ -12,7 +12,7 @@ urlpatterns = [
     path('list/', user_view.index, name='list'),
     path('edit/<int:pk>/', user_view.update, name='edit'),
         
-    path('contracheque/', home_view.home, name='contracheque'),
+    path('contracheque/', home_view.consultar_contracheque, name='contracheque'),
 
     path('inserirpdf/', home_view.adicionar_contracheque, name='adicionar_pdf'),
 

@@ -60,6 +60,12 @@ def mover_arquivo(origem, destino):
     except PermissionError:
         print(f'Erro: Permissão negada ao tentar mover o arquivo.')
 
+@login_required(login_url='home:login')
+def consultar_contracheque(request):
+
+    return render(request, 'home/consultar_contracheque.html')
+
+
 # Create your views here.
 @login_required(login_url='home:login')
 def home(request):
@@ -68,8 +74,7 @@ def home(request):
 
     context = { 
         'menus': dataMenus, 
-        'sub_menus': dataSubMenus,
-        'user' : user
+        'sub_menus': dataSubMenus
     }
 
     return render(request, 'home/index.html', context)
@@ -80,13 +85,14 @@ def adicionar_contracheque(request):
 
         if request.FILES.get('contracheque'):
 
-            new_hobby = Contracheque(
+            Contracheque_instance = Contracheque(
                 nome=request.POST.get('nome'),
                 data=request.POST.get('data'),
                 arquivo=request.FILES.get('contracheque'),
             )
 
-            new_hobby.save()
+            # Pega o Contra Cheque mais recente criado
+            Contracheque_instance.save()
 
             # Pega o Contra Cheque mais recente criado
             ContrachequeMaisRecente = Contracheque.objects.latest('id')
@@ -114,24 +120,47 @@ def adicionar_contracheque(request):
                     next_line = find_next_line_after_phrase(text, target_phrase)
 
                     if next_line:
-                        alterar_nome("media/recibos/output-{}.pdf".format(page), next_line.strip() + '.pdf')
+                        # Desconsiderar os 5 primeiros números
+                        texto_sem_espacos = next_line.lower().strip()
+                        texto_sem_numeros = next_line.lower()[5:]
+                        codigo_user = next_line[:5]
+
+                        try:
+                            Funcionario.objects.get(codigo=codigo_user)
+                        except Funcionario.DoesNotExist:
+                            # Dividir a string em palavras
+                            palavras = texto_sem_numeros.split()
+
+                            # Extrair o primeiro e último nome
+                            primeiro_nome = palavras[0]
+                            ultimo_nome = palavras[-1]
+
+                            user_instance = User.objects.create_user(username=primeiro_nome + '.' + ultimo_nome, password='defensoria@123')
+                            user_instance.save()
+
+                            latest_user = User.objects.latest('id')
+                            funcionario_instance = Funcionario(codigo=codigo_user, user=latest_user)
+                            funcionario_instance.save()
+
+                        funcionario = Funcionario.objects.get(codigo=codigo_user)
+
+                        alterar_nome("media/recibos/output-{}.pdf".format(page), texto_sem_espacos + '.pdf')
 
                         # Exemplo de uso
-                        origem_arquivo = 'media/recibos/{}.pdf'.format(next_line.strip())
-                        destino_arquivo = 'media/recibos/1111/{}.pdf'.format(next_line.strip())
+                        origem_arquivo = 'media/recibos/{}.pdf'.format(texto_sem_espacos)
+                        destino_arquivo = 'media/recibos/{}/{}.pdf'.format(codigo_user, texto_sem_espacos)
 
-                        mover_arquivo(origem_arquivo, destino_arquivo)
+                        mover_arquivo(origem_arquivo, destino_arquivo)                            
 
-                        funcionario = Funcionario.objects.get(codigo=111)
-                        User = User.objects.get(id=funcionario.user_id)
+                        recibo = Recibo(nome='Recibo {}'.format(request.POST.get('nome')) , user=funcionario, contracheque=ContrachequeMaisRecente,  arquivo='media/recibos/1111/{}.pdf'.format(next_line.strip()) )
+                        recibo.save()
 
-                        recibo = Recibo(nome='Mês de Janeiro', user=User, contracheque=ContrachequeMaisRecente,  arquivo='media/recibos/1111/{}.pdf'.format(next_line.strip()) )
                     else:
                         print("Frase não encontrada ou não há próxima linha após a frase.")
 
                     page+=1
 
-            return render(request, 'home/adicionar_contracheque.html', {'recibo' : new_hobby })
+            return render(request, 'home/adicionar_contracheque.html', {'recibo' : recibo })
 
         else :
             return render(request, 'home/adicionar_contracheque.html')
