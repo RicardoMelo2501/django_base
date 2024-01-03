@@ -20,9 +20,9 @@ Portal Funcionários
   
             <div class="p-4 row">
                 <!-- Contracheques -->
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 p-2">
                     <div class="card text-center shadow-lg download-button h-100">
-                        <a href="{% url "home:contracheque" %}" class="text-decoration-none">
+                        <a href="{% url 'home:contracheque' %}" class="text-decoration-none">
                             <div class="px-4 pt-4 text-dark" style="font-size: 8vw;">
                                 <i class="fas fa-money-check-alt"></i>                             
                             </div>
@@ -35,9 +35,9 @@ Portal Funcionários
 
                 {% if user.is_superuser %}
                 <!-- Add PDF -->
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 p-2">
                     <div class="card text-center shadow-lg download-button h-100">
-                        <a href="{% url "home:adicionar_pdf" %}" class="text-decoration-none">
+                        <a href="{% url 'home:adicionar_pdf' %}" class="text-decoration-none">
                             <div class="px-4 pt-4 text-dark" style="font-size: 8vw;">
                                 <i class="fas fa-receipt"></i>                          
                             </div>
