@@ -147,11 +147,11 @@ def adicionar_contracheque(request):
 
                     writer.add_page(reader.pages[page])
 
-                    with open(media_folder_path + "recibos/output-{}.pdf".format(page), 'wb') as outfile:
+                    with open(media_folder_path + "/recibos/output-{}.pdf".format(page), 'wb') as outfile:
                         writer.write(outfile)
                         writer = PdfWriter()
 
-                    text = extract_text(media_folder_path + "recibos/output-{}.pdf".format(page))
+                    text = extract_text(media_folder_path + "/recibos/output-{}.pdf".format(page))
 
                     # Frase específica a ser procurada
                     target_phrase_func = "Código Nome do Funcionário"
@@ -186,7 +186,7 @@ def adicionar_contracheque(request):
 
                         funcionario_instance = Funcionario.objects.get(codigo=codigo_user)
 
-                        alterar_nome(media_folder_path + "recibos/output-{}.pdf".format(page), texto_sem_espacos + '.pdf')
+                        alterar_nome(media_folder_path + "/recibos/output-{}.pdf".format(page), texto_sem_espacos + '.pdf')
 
                         # Example usage
                         key = generate_key()
