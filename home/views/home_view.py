@@ -134,79 +134,83 @@ def adicionar_contracheque(request):
             ContrachequeMaisRecente = Contracheque.objects.latest('id')
 
             # Analisando o conteúdo do contracheque inserido
-            with open("/media/" + ContrachequeMaisRecente.arquivo.name, 'rb') as infile:
-                reader = PdfReader(infile)
-                page = 0
-                writer = PdfWriter()
-                total_pages = len(reader.pages)
+            try:
+                with open("/media/" + ContrachequeMaisRecente.arquivo.name, 'rb') as infile:
+                    reader = PdfReader(infile)
+                    page = 0
+                    writer = PdfWriter()
+                    total_pages = len(reader.pages)
 
-                while page < total_pages:
+                    while page < total_pages:
 
-                    writer.add_page(reader.pages[page])
+                        writer.add_page(reader.pages[page])
 
-                    with open("/media/recibos/output-{}.pdf".format(page), 'wb') as outfile:
-                        writer.write(outfile)
-                        writer = PdfWriter()
+                        with open("/media/recibos/output-{}.pdf".format(page), 'wb') as outfile:
+                            writer.write(outfile)
+                            writer = PdfWriter()
 
-                    text = extract_text("/media/recibos/output-{}.pdf".format(page))
+                        text = extract_text("/media/recibos/output-{}.pdf".format(page))
 
-                    # Frase específica a ser procurada
-                    target_phrase_func = "Código Nome do Funcionário"
-                    target_phrase_date = "Mês"
+                        # Frase específica a ser procurada
+                        target_phrase_func = "Código Nome do Funcionário"
+                        target_phrase_date = "Mês"
 
-                    nome_cod_func = find_next_line_after_phrase(text, target_phrase_func)
-                    mes = find_phrase_in_line(text, target_phrase_date)[4:]
+                        nome_cod_func = find_next_line_after_phrase(text, target_phrase_func)
+                        mes = find_phrase_in_line(text, target_phrase_date)[4:]
 
-                    if nome_cod_func and mes:
-                        # Desconsiderar os 5 primeiros números
-                        texto_sem_espacos = nome_cod_func.strip().lower()
-                        texto_sem_numeros = nome_cod_func.lower()[5:]
-                        codigo_user = nome_cod_func[:5]
+                        if nome_cod_func and mes:
+                            # Desconsiderar os 5 primeiros números
+                            texto_sem_espacos = nome_cod_func.strip().lower()
+                            texto_sem_numeros = nome_cod_func.lower()[5:]
+                            codigo_user = nome_cod_func[:5]
 
-                        # Validando caso não tenha usuário/funcionário cadastrado
-                        try:
-                            Funcionario.objects.get(codigo=codigo_user)
-                        except Funcionario.DoesNotExist:
-                            # Dividir a string em palavras
-                            palavras = texto_sem_numeros.split()
+                            # Validando caso não tenha usuário/funcionário cadastrado
+                            try:
+                                Funcionario.objects.get(codigo=codigo_user)
+                            except Funcionario.DoesNotExist:
+                                # Dividir a string em palavras
+                                palavras = texto_sem_numeros.split()
 
-                            # Extrair o primeiro e último nome
-                            primeiro_nome = palavras[0]
-                            ultimo_nome = palavras[-1]
+                                # Extrair o primeiro e último nome
+                                primeiro_nome = palavras[0]
+                                ultimo_nome = palavras[-1]
 
-                            user_instance = User.objects.create_user(username=primeiro_nome + '.' + ultimo_nome, password='senha@123')
-                            user_instance.save()
+                                user_instance = User.objects.create_user(username=primeiro_nome + '.' + ultimo_nome, password='senha@123')
+                                user_instance.save()
 
-                            latest_user = User.objects.latest('id')
-                            funcionario_instance = Funcionario(codigo=codigo_user, user=latest_user)
-                            funcionario_instance.save()
+                                latest_user = User.objects.latest('id')
+                                funcionario_instance = Funcionario(codigo=codigo_user, user=latest_user)
+                                funcionario_instance.save()
 
-                        funcionario_instance = Funcionario.objects.get(codigo=codigo_user)
+                            funcionario_instance = Funcionario.objects.get(codigo=codigo_user)
 
-                        alterar_nome("/media/recibos/output-{}.pdf".format(page), texto_sem_espacos + '.pdf')
+                            alterar_nome("/media/recibos/output-{}.pdf".format(page), texto_sem_espacos + '.pdf')
 
-                        # Example usage
-                        key = generate_key()
-                        plaintext = texto_sem_espacos
+                            # Example usage
+                            key = generate_key()
+                            plaintext = texto_sem_espacos
 
-                        # Encrypt the string
-                        encrypted_url = encrypt_string(plaintext, key)  
+                            # Encrypt the string
+                            encrypted_url = encrypt_string(plaintext, key)  
 
-                        # Exemplo de uso
-                        origem_arquivo = '/media/recibos/{}.pdf'.format(texto_sem_espacos)
-                        destino_arquivo = '/media/recibos/{}/{}.pdf'.format(codigo_user, encrypted_url)
+                            # Exemplo de uso
+                            origem_arquivo = '/media/recibos/{}.pdf'.format(texto_sem_espacos)
+                            destino_arquivo = '/media/recibos/{}/{}.pdf'.format(codigo_user, encrypted_url)
 
-                        mover_arquivo(origem_arquivo, destino_arquivo)                                          
+                            mover_arquivo(origem_arquivo, destino_arquivo)                                          
 
-                        recibo = Recibo(nome='Recibo {}'.format(mes) , user=funcionario_instance, contracheque=ContrachequeMaisRecente,  arquivo='/' + destino_arquivo )
-                        recibo.save()
+                            recibo = Recibo(nome='Recibo {}'.format(mes) , user=funcionario_instance, contracheque=ContrachequeMaisRecente,  arquivo='/' + destino_arquivo )
+                            recibo.save()
 
-                    else:
-                        print("Frase não encontrada ou não há próxima linha após a frase.")
+                        else:
+                            print("Frase não encontrada ou não há próxima linha após a frase.")
 
-                    page+=1
+                        page+=1
 
-            return render(request, 'home/consultar_contracheque.html')
+                    return render(request, 'home/consultar_contracheque.html')
+            except FileNotFoundError as e:
+                print(f"File not found: {e}")
+            
 
         else :
             return render(request, 'home/adicionar_contracheque.html')
