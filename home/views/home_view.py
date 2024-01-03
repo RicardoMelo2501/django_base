@@ -76,10 +76,10 @@ def mover_arquivo(origem, destino):
         if not os.path.exists(os.path.dirname(destino)):
             # Cria o diretório se não existir
             os.makedirs(os.path.dirname(destino))
-            print(f'Diretório {os.path.dirname(destino)} criado.')
+            # print(f'Diretório {os.path.dirname(destino)} criado.')
             # Tenta mover o arquivo novamente
             shutil.move(origem, destino)
-            print(f'Arquivo movido de {origem} para {destino}')
+            # print(f'Arquivo movido de {origem} para {destino}')
         else:
             print(f'Erro: O arquivo em {origem} não foi encontrado.')
     except PermissionError:
@@ -134,7 +134,7 @@ def adicionar_contracheque(request):
             ContrachequeMaisRecente = Contracheque.objects.latest('id')
 
             # Analisando o conteúdo do contracheque inserido
-            with open("media/" + ContrachequeMaisRecente.arquivo.name, 'rb') as infile:
+            with open("/media/" + ContrachequeMaisRecente.arquivo.name, 'rb') as infile:
                 reader = PdfReader(infile)
                 page = 0
                 writer = PdfWriter()
@@ -144,11 +144,11 @@ def adicionar_contracheque(request):
 
                     writer.add_page(reader.pages[page])
 
-                    with open("media/recibos/output-{}.pdf".format(page), 'wb') as outfile:
+                    with open("/media/recibos/output-{}.pdf".format(page), 'wb') as outfile:
                         writer.write(outfile)
                         writer = PdfWriter()
 
-                    text = extract_text("media/recibos/output-{}.pdf".format(page))
+                    text = extract_text("/media/recibos/output-{}.pdf".format(page))
 
                     # Frase específica a ser procurada
                     target_phrase_func = "Código Nome do Funcionário"
@@ -183,7 +183,7 @@ def adicionar_contracheque(request):
 
                         funcionario_instance = Funcionario.objects.get(codigo=codigo_user)
 
-                        alterar_nome("media/recibos/output-{}.pdf".format(page), texto_sem_espacos + '.pdf')
+                        alterar_nome("/media/recibos/output-{}.pdf".format(page), texto_sem_espacos + '.pdf')
 
                         # Example usage
                         key = generate_key()
@@ -193,8 +193,8 @@ def adicionar_contracheque(request):
                         encrypted_url = encrypt_string(plaintext, key)  
 
                         # Exemplo de uso
-                        origem_arquivo = 'media/recibos/{}.pdf'.format(texto_sem_espacos)
-                        destino_arquivo = 'media/recibos/{}/{}.pdf'.format(codigo_user, encrypted_url)
+                        origem_arquivo = '/media/recibos/{}.pdf'.format(texto_sem_espacos)
+                        destino_arquivo = '/media/recibos/{}/{}.pdf'.format(codigo_user, encrypted_url)
 
                         mover_arquivo(origem_arquivo, destino_arquivo)                                          
 
