@@ -196,8 +196,8 @@ def adicionar_contracheque(request):
                         encrypted_url = encrypt_string(plaintext, key)  
 
                         # Exemplo de uso
-                        origem_arquivo = media_folder_path + '/recibos/{}.pdf'.format(texto_sem_espacos)
-                        destino_arquivo = media_folder_path + '/recibos/{}/{}.pdf'.format(codigo_user, encrypted_url)
+                        origem_arquivo = '/media/recibos/{}.pdf'.format(texto_sem_espacos)
+                        destino_arquivo = '/media/recibos/{}/{}.pdf'.format(codigo_user, encrypted_url)
 
                         mover_arquivo(origem_arquivo, destino_arquivo)                                          
 
