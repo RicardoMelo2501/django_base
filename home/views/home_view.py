@@ -196,12 +196,13 @@ def adicionar_contracheque(request):
                         encrypted_url = encrypt_string(plaintext, key)  
 
                         # Exemplo de uso
-                        origem_arquivo = '/media/recibos/{}.pdf'.format(texto_sem_espacos)
-                        destino_arquivo = '/media/recibos/{}/{}.pdf'.format(codigo_user, encrypted_url)
+                        origem_arquivo = media_folder_path + '/recibos/{}.pdf'.format(texto_sem_espacos)
+                        destino_arquivo = media_folder_path + '/recibos/{}/{}.pdf'.format(codigo_user, encrypted_url)
+                        arquivo_url = '/media/recibos/{}/{}.pdf'.format(codigo_user, encrypted_url)
 
                         mover_arquivo(origem_arquivo, destino_arquivo)                                          
 
-                        recibo = Recibo(nome='Recibo {}'.format(mes) , user=funcionario_instance, contracheque=ContrachequeMaisRecente,  arquivo='/' + destino_arquivo )
+                        recibo = Recibo(nome='Recibo {}'.format(mes) , user=funcionario_instance, contracheque=ContrachequeMaisRecente,  arquivo=arquivo_url )
                         recibo.save()
 
                     else:
