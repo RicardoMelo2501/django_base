@@ -137,7 +137,7 @@ def adicionar_contracheque(request):
             # Get the complete path to the media folder
             media_folder_path = os.path.join(settings.BASE_DIR, settings.MEDIA_ROOT)
             # Analisando o conteúdo do contracheque inserido
-            with open(media_folder_path + ContrachequeMaisRecente.arquivo.name, 'rb') as infile:
+            with open(media_folder_path + '/' + ContrachequeMaisRecente.arquivo.name, 'rb') as infile:
                 reader = PdfReader(infile)
                 page = 0
                 writer = PdfWriter()
