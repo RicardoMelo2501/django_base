@@ -4,13 +4,29 @@ import re
 import os
 import shutil
 import json
+import base64
 
-from django.shortcuts import render, redirect
+from cryptography.fernet import Fernet
+from django.shortcuts import render, redirect, get_object_or_404
 from menu.models import Menu, SubMenu
 from home.models import Contracheque, Recibo, Funcionario
 from django.contrib import auth, messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+
+def generate_key():
+    return Fernet.generate_key()
+
+def encrypt_string(plain_text, key):
+    cipher_suite = Fernet(key)
+    cipher_text = cipher_suite.encrypt(plain_text.encode())
+    return base64.urlsafe_b64encode(cipher_text).rstrip(b'=')
+
+def decrypt_string(cipher_text, key):
+    cipher_suite = Fernet(key)
+    cipher_text += b'=' * (4 - (len(cipher_text) % 4))  # Add padding if needed
+    decrypted_text = cipher_suite.decrypt(base64.urlsafe_b64decode(cipher_text)).decode()
+    return decrypted_text
 
 # Procurar a próxima linha após uma frase específica
 def find_next_line_after_phrase(text, phrase):
@@ -26,6 +42,15 @@ def find_next_line_after_phrase(text, phrase):
             found_phrase = True
 
     return next_line
+
+def find_phrase_in_line(text, phrase):
+    lines = text.split('\n')
+
+    for line in lines:
+        if re.search(phrase, line):
+            return line
+
+    return None
 
 
 def alterar_nome(caminho_atual_value, novo_nome_value):
@@ -63,7 +88,18 @@ def mover_arquivo(origem, destino):
 @login_required(login_url='home:login')
 def consultar_contracheque(request):
 
-    return render(request, 'home/consultar_contracheque.html')
+    # Assuming you have a User model and Recibo model with a ForeignKey 'user'
+    user = get_object_or_404(User, id=request.user.id)
+    funcionario = get_object_or_404(Funcionario, user=user)
+
+    # Filter receipts based on the user ID
+    recibos_instance = Recibo.objects.filter(user=funcionario)
+
+    context = { 
+        'recibos': recibos_instance, 
+    }
+
+    return render(request, 'home/consultar_contracheque.html', context)
 
 
 # Create your views here.
@@ -115,16 +151,19 @@ def adicionar_contracheque(request):
                     text = extract_text("media/recibos/output-{}.pdf".format(page))
 
                     # Frase específica a ser procurada
-                    target_phrase = "Código Nome do Funcionário"
+                    target_phrase_func = "Código Nome do Funcionário"
+                    target_phrase_date = "Mês"
 
-                    next_line = find_next_line_after_phrase(text, target_phrase)
+                    nome_cod_func = find_next_line_after_phrase(text, target_phrase_func)
+                    mes = find_phrase_in_line(text, target_phrase_date)[4:]
 
-                    if next_line:
+                    if nome_cod_func and mes:
                         # Desconsiderar os 5 primeiros números
-                        texto_sem_espacos = next_line.lower().strip()
-                        texto_sem_numeros = next_line.lower()[5:]
-                        codigo_user = next_line[:5]
+                        texto_sem_espacos = nome_cod_func.strip().lower()
+                        texto_sem_numeros = nome_cod_func.lower()[5:]
+                        codigo_user = nome_cod_func[:5]
 
+                        # Validando caso não tenha usuário/funcionário cadastrado
                         try:
                             Funcionario.objects.get(codigo=codigo_user)
                         except Funcionario.DoesNotExist:
@@ -135,24 +174,31 @@ def adicionar_contracheque(request):
                             primeiro_nome = palavras[0]
                             ultimo_nome = palavras[-1]
 
-                            user_instance = User.objects.create_user(username=primeiro_nome + '.' + ultimo_nome, password='defensoria@123')
+                            user_instance = User.objects.create_user(username=primeiro_nome + '.' + ultimo_nome, password='senha@123')
                             user_instance.save()
 
                             latest_user = User.objects.latest('id')
                             funcionario_instance = Funcionario(codigo=codigo_user, user=latest_user)
                             funcionario_instance.save()
 
-                        funcionario = Funcionario.objects.get(codigo=codigo_user)
+                        funcionario_instance = Funcionario.objects.get(codigo=codigo_user)
 
                         alterar_nome("media/recibos/output-{}.pdf".format(page), texto_sem_espacos + '.pdf')
 
+                        # Example usage
+                        key = generate_key()
+                        plaintext = texto_sem_espacos
+
+                        # Encrypt the string
+                        encrypted_url = encrypt_string(plaintext, key)  
+
                         # Exemplo de uso
                         origem_arquivo = 'media/recibos/{}.pdf'.format(texto_sem_espacos)
-                        destino_arquivo = 'media/recibos/{}/{}.pdf'.format(codigo_user, texto_sem_espacos)
+                        destino_arquivo = 'media/recibos/{}/{}.pdf'.format(codigo_user, encrypted_url)
 
-                        mover_arquivo(origem_arquivo, destino_arquivo)                            
+                        mover_arquivo(origem_arquivo, destino_arquivo)                                          
 
-                        recibo = Recibo(nome='Recibo {}'.format(request.POST.get('nome')) , user=funcionario, contracheque=ContrachequeMaisRecente,  arquivo='media/recibos/1111/{}.pdf'.format(next_line.strip()) )
+                        recibo = Recibo(nome='Recibo {}'.format(mes) , user=funcionario_instance, contracheque=ContrachequeMaisRecente,  arquivo='/' + destino_arquivo )
                         recibo.save()
 
                     else:
@@ -160,7 +206,7 @@ def adicionar_contracheque(request):
 
                     page+=1
 
-            return render(request, 'home/adicionar_contracheque.html', {'recibo' : recibo })
+            return render(request, 'home/consultar_contracheque.html')
 
         else :
             return render(request, 'home/adicionar_contracheque.html')

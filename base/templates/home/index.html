@@ -17,8 +17,7 @@ Portal Funcionários
     }
 </style>
 
-    <div class="card">
-        <div class="card-body">
+  
             <div class="p-4 row">
                 <!-- Contracheques -->
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
@@ -33,6 +32,8 @@ Portal Funcionários
                         </a>
                     </div>
                 </div>
+
+                {% if user.is_superuser %}
                 <!-- Add PDF -->
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
                     <div class="card text-center shadow-lg download-button h-100">
@@ -46,7 +47,7 @@ Portal Funcionários
                         </a>
                     </div>
                 </div>
-            </div>        
-    </div>
+                {% endif %}
+   
 {%endblock%}
 

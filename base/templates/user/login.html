@@ -9,7 +9,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 80%;
       /* background: linear-gradient(45deg, #FFA500, #FFFF00, #0000FF); */
+  }
+
+  img {
+    max-width: 80%;
+    height: auto;
   }
 </style>
 {% endblock 'body_style' %}
@@ -20,7 +26,7 @@
     <div class="card-body form-wrapper">
       
       <div class="text-center">
-          <img src="/media/sistema/logo.png" width="auto" height="50" class="d-inline-block align-top my-4" alt="">
+          <img src="/media/sistema/logo.png" class="d-inline-block align-top my-4" alt="">
       </div>
       
       {% include 'alerts/general.html' %}

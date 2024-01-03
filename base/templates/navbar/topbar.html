@@ -11,7 +11,7 @@
             <!-- Botões Canto Superior Direito -->
             <div>
                 {% if user.is_authenticated %}
-                        <a class=" btn btn-warning btn-sm" href="{% url 'home:logout' %}">Sair<i class="fas fa-sign-out-alt ml-2"></i></a>
+                    <a class=" btn btn-danger btn-sm" href="{% url 'home:logout' %}">Sair<i class="fas fa-sign-out-alt ml-2"></i></a>
                 {% endif %}
 
                 {% if user.is_superuser %}

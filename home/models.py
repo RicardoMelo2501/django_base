@@ -16,6 +16,10 @@ class Funcionario(models.Model):
     # def __str__(self):
     #     return self.user.username
 
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    force_password_change = models.BooleanField(default=True)
+
 class Contracheque(models.Model):
     nome  = models.CharField('Nome', max_length=250)
     data = models.DateTimeField(default=datetime.now, null=False)
@@ -28,7 +32,7 @@ class Recibo(models.Model):
     nome = models.CharField('nome', max_length=250)
     user = models.ForeignKey(Funcionario, on_delete=models.CASCADE)
     contracheque = models.ForeignKey(Contracheque, on_delete=models.DO_NOTHING, null=False, blank=False)
-    arquivo = models.CharField('nome', max_length=150)
+    arquivo = models.CharField('nome', max_length=500)
 
     def __str__(self):
         return self.nome
