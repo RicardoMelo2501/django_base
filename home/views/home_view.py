@@ -5,7 +5,6 @@ from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
-@login_required(login_url='home:login')
 def home(request):
     dataMenus = Menu.objects.all()
     dataSubMenus = SubMenu.objects.all()
@@ -18,6 +17,7 @@ def home(request):
 
     return render(request, 'home/index.html', context)
 
+@login_required(login_url='home:login')
 def default_page(request):
     dataMenus = Menu.objects.all()
     dataSubMenus = SubMenu.objects.all()
